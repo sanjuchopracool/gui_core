@@ -50,13 +50,13 @@ target_link_libraries(gui_core PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 # Resources:
 set(icons_resource_file
-    "icons/dark/link.png"
-    "icons/dark/link@2x.png"
+    "icons/dark/actions/16@2x/link.png"
+    "icons/dark/actions/16/link.png"
 )
 
 qt_add_resources(gui_core "icons"
     PREFIX
-        "/dark/"
+        "/"
     FILES
         ${icons_resource_file}
 )
