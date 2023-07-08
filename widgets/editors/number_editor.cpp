@@ -7,89 +7,91 @@
 #include "line_editor.h"
 
 enum EditMode { eLabel, eLineEdit };
-NumberEditor::NumberEditor(QWidget *parent)
+NumberEditor::NumberEditor(QWidget *parent, bool add_spacer)
     : QWidget{parent}
 {
-    m_stack_widget = new QStackedWidget(this);
-    m_stack_widget->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
-
-    m_label_edit = new SuffixedLabelEditor(this);
+    m_label_edit = new LabelEditor(this);
     m_label_edit->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
 
     m_line_edit = new LineEditor(this);
-    //    m_line_edit->installEventFilter(this);
+    m_line_edit->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
 
-    m_stack_widget->addWidget(m_label_edit);
-    m_stack_widget->addWidget(m_line_edit);
+    m_suffix_label = new QLabel(this);
+    m_suffix_label->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
 
     QHBoxLayout *main_layout = new QHBoxLayout();
     main_layout->setContentsMargins(0, 0, 0, 0);
-    main_layout->addWidget(m_stack_widget);
+    main_layout->setSpacing(0);
+    main_layout->addWidget(m_label_edit);
+    main_layout->addWidget(m_line_edit);
+    main_layout->addWidget(m_suffix_label);
+
+    if (add_spacer) {
+        main_layout->addStretch();
+    }
     setLayout(main_layout);
 
-    connect(m_label_edit,
-            &SuffixedLabelEditor::mouse_released,
-            this,
-            &NumberEditor::enable_line_edit);
-    connect(m_label_edit, &SuffixedLabelEditor::mouse_move_started, this, [this](const QPointF &pos) {
+    connect(m_label_edit, &LabelEditor::mouse_released, this, &NumberEditor::enable_line_edit);
+    connect(m_label_edit, &LabelEditor::mouse_move_started, this, [this](const QPointF &pos) {
         m_prev_pos = pos;
-        m_label_edit->set_text(text_value());
+        update_text();
     });
 
-    connect(m_label_edit, &SuffixedLabelEditor::mouse_moved, this, [this](const QPointF &pos) {
+    connect(m_label_edit, &LabelEditor::mouse_moved, this, [this](const QPointF &pos) {
         calculate_delta(pos);
-        m_label_edit->set_text(text_value());
+        update_text();
     });
 
-    connect(m_label_edit, &SuffixedLabelEditor::mouse_move_end, this, [this](const QPointF &pos) {
+    connect(m_label_edit, &LabelEditor::mouse_move_end, this, [this](const QPointF &pos) {
         calculate_delta(pos);
-        m_label_edit->set_text(text_value());
+        update_text();
     });
 
     connect(m_line_edit, &LineEditor::editing_ended, this, &NumberEditor::enable_label_edit);
     connect(m_line_edit, &LineEditor::up_key_pressed, this, [this]() {
         increase();
-        m_line_edit->set_text(text_value());
+        update_text();
     });
     connect(m_line_edit, &LineEditor::down_key_pressed, this, [this]() {
         decrease();
-        m_line_edit->set_text(text_value());
+        update_text();
     });
     connect(m_line_edit, &LineEditor::editing_finished, this, [this](const QString &str) {
         set_value_from_text(str);
     });
 
     setFocusPolicy(Qt::StrongFocus);
+    setFixedHeight(m_line_edit->minimumSizeHint().height());
+    m_line_edit->hide();
 }
 
 void NumberEditor::set_suffix(const QString &suffix)
 {
-    m_label_edit->set_suffix(suffix);
-    m_line_edit->set_suffix(suffix);
-}
-
-void NumberEditor::set_text(const QString &text)
-{
-    m_label_edit->set_text(text);
-    m_line_edit->set_text(text);
+    m_suffix_label->setText(' ' + suffix);
 }
 
 void NumberEditor::focusInEvent(QFocusEvent *event)
 {
-    m_stack_widget->currentWidget()->setFocus();
+    if (m_line_edit->isVisible()) {
+        m_line_edit->setFocus();
+    } else {
+        m_label_edit->setFocus();
+    }
     event->accept();
 }
 
 void NumberEditor::enable_line_edit()
 {
-    m_line_edit->set_text(text_value());
-    m_stack_widget->setCurrentIndex(eLineEdit);
+    m_line_edit->show();
+    m_label_edit->hide();
+    update_text();
 }
 
 void NumberEditor::enable_label_edit()
 {
-    m_label_edit->set_text(text_value());
-    m_stack_widget->setCurrentIndex(eLabel);
+    m_label_edit->show();
+    m_line_edit->hide();
+    update_text();
 }
 
 void NumberEditor::calculate_delta(const QPointF &pos)
@@ -99,14 +101,23 @@ void NumberEditor::calculate_delta(const QPointF &pos)
     emit delta_changed(m_delta);
 }
 
-IntEditor::IntEditor(QWidget *parent)
-    : NumberEditor(parent)
+void NumberEditor::update_text()
+{
+    if (m_line_edit->isVisible()) {
+        m_line_edit->setText(text_value());
+    } else {
+        m_label_edit->setText(text_value(1));
+    }
+}
+
+IntEditor::IntEditor(QWidget *parent, bool add_spacer)
+    : NumberEditor(parent, add_spacer)
 {
     connect(this, &NumberEditor::delta_changed, this, [=](qreal delta) {
         m_value = validated_value(m_value + delta);
+        emit value_changed(m_value);
     });
-
-    set_text(QString::number(m_value));
+    update_text();
 }
 
 void IntEditor::set_range(int min, int max)
@@ -119,10 +130,10 @@ void IntEditor::set_range(int min, int max)
 void IntEditor::set_value(int value)
 {
     m_value = validated_value(value);
-    set_text(text_value());
+    update_text();
 }
 
-QString IntEditor::text_value() const
+QString IntEditor::text_value(uint8_t) const
 {
     return QString::number(m_value);
 }
@@ -130,11 +141,13 @@ QString IntEditor::text_value() const
 void IntEditor::increase()
 {
     m_value = validated_value(m_value + 1);
+    emit value_changed(m_value);
 }
 
 void IntEditor::decrease()
 {
     m_value = validated_value(m_value - 1);
+    emit value_changed(m_value);
 }
 
 void IntEditor::set_value_from_text(const QString &text)
@@ -142,7 +155,11 @@ void IntEditor::set_value_from_text(const QString &text)
     bool ok = false;
     int value = text.toInt(&ok);
     if (ok) {
-        m_value = validated_value(value);
+        value = validated_value(value);
+        if (m_value != value) {
+            m_value = value;
+            emit value_changed(m_value);
+        }
     }
 }
 
@@ -156,14 +173,15 @@ int IntEditor::validated_value(int value) const
     return value;
 }
 
-DoubleEditor::DoubleEditor(QWidget *parent)
-    : NumberEditor(parent)
+DoubleEditor::DoubleEditor(QWidget *parent, bool add_spacer)
+    : NumberEditor(parent, add_spacer)
 {
     connect(this, &NumberEditor::delta_changed, this, [=](qreal delta) {
         m_value = validated_value(m_value + delta);
+        emit value_changed(m_value);
     });
 
-    set_text(QString::number(m_value));
+    update_text();
 }
 
 void DoubleEditor::set_range(double min, double max)
@@ -176,22 +194,27 @@ void DoubleEditor::set_range(double min, double max)
 void DoubleEditor::set_value(double value)
 {
     m_value = validated_value(value);
-    set_text(text_value());
+    update_text();
 }
 
-QString DoubleEditor::text_value() const
+QString DoubleEditor::text_value(uint8_t decimel) const
 {
-    return QString::number(m_value);
+    if (decimel)
+        return QString::number(m_value, 'f', decimel);
+    else
+        return QString::number(m_value);
 }
 
 void DoubleEditor::increase()
 {
     m_value = validated_value(m_value + 1);
+    emit value_changed(m_value);
 }
 
 void DoubleEditor::decrease()
 {
     m_value = validated_value(m_value - 1);
+    emit value_changed(m_value);
 }
 
 void DoubleEditor::set_value_from_text(const QString &text)
@@ -199,7 +222,11 @@ void DoubleEditor::set_value_from_text(const QString &text)
     bool ok = false;
     double value = text.toDouble(&ok);
     if (ok) {
-        m_value = validated_value(value);
+        value = validated_value(value);
+        if (m_value != value) {
+            m_value = value;
+            emit value_changed(m_value);
+        }
     }
 }
 
@@ -211,4 +238,56 @@ double DoubleEditor::validated_value(double value) const
         return m_max;
 
     return value;
+}
+
+TwoIntEditor::TwoIntEditor(QWidget *parent)
+    : QWidget(parent)
+{
+    m_left = new IntEditor(this, false);
+    m_right = new IntEditor(this);
+    m_left->set_suffix(", ");
+
+    QHBoxLayout *main_layout = new QHBoxLayout();
+    main_layout->setContentsMargins(0, 0, 0, 0);
+    main_layout->setSpacing(0);
+    main_layout->addWidget(m_left);
+    main_layout->addWidget(m_right);
+    setLayout(main_layout);
+}
+
+void TwoIntEditor::set_suffix(const QString &suffix)
+{
+    m_right->set_suffix(suffix);
+}
+
+void TwoIntEditor::set_range(double min, double max)
+{
+    m_left->set_range(min, max);
+    m_right->set_range(min, max);
+}
+
+TwoDoubleEditor::TwoDoubleEditor(QWidget *parent)
+    : QWidget(parent)
+{
+    m_left = new DoubleEditor(this, false);
+    m_right = new DoubleEditor(this);
+    m_left->set_suffix(", ");
+
+    QHBoxLayout *main_layout = new QHBoxLayout();
+    main_layout->setContentsMargins(0, 0, 0, 0);
+    main_layout->setSpacing(0);
+    main_layout->addWidget(m_left);
+    main_layout->addWidget(m_right);
+    setLayout(main_layout);
+}
+
+void TwoDoubleEditor::set_suffix(const QString &suffix)
+{
+    m_right->set_suffix(suffix);
+}
+
+void TwoDoubleEditor::set_range(double min, double max)
+{
+    m_left->set_range(min, max);
+    m_right->set_range(min, max);
 }

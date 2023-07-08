@@ -20,6 +20,7 @@ set(PROJECT_SOURCES
         widgets/editors/label_editor.h widgets/editors/label_editor.cpp
         widgets/editors/line_editor.h widgets/editors/line_editor.cpp
         widgets/editors/number_editor.h widgets/editors/number_editor.cpp
+        styles/dark_style.h styles/dark_style.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>98</width>
-    <height>152</height>
+    <width>66</width>
+    <height>98</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,36 +22,6 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="QLineEdit" name="lineEdit">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>1</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_5">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>%</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
     <widget class="IntEditor" name="intEditor" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -62,44 +32,13 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton">
-     <property name="text">
-      <string>ABC</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>100</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>%</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
     <widget class="DoubleEditor" name="double_editor" native="true"/>
+   </item>
+   <item>
+    <widget class="TwoIntEditor" name="two_int_editor" native="true"/>
+   </item>
+   <item>
+    <widget class="TwoDoubleEditor" name="two_double_editor" native="true"/>
    </item>
   </layout>
  </widget>
@@ -112,6 +51,18 @@
   </customwidget>
   <customwidget>
    <class>DoubleEditor</class>
+   <extends>QWidget</extends>
+   <header>./widgets/editors/number_editor.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TwoIntEditor</class>
+   <extends>QWidget</extends>
+   <header>./widgets/editors/number_editor.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TwoDoubleEditor</class>
    <extends>QWidget</extends>
    <header>./widgets/editors/number_editor.h</header>
    <container>1</container>

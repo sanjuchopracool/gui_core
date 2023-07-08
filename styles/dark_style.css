@@ -1,0 +1,14 @@
+QWidget {
+background-color:#232323
+}
+QLabel {
+color:#A4A4A4;
+}
+
+LabelEditor:hover {
+color:#FFFFFF;
+}
+
+LabelEditor {
+color:#297EEB;
+}
