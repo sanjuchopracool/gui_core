@@ -1,5 +1,6 @@
 #include "test.h"
 #include <QIntValidator>
+#include <QToolButton>
 #include "./ui_test.h"
 
 Test::Test(QWidget *parent)
@@ -20,6 +21,9 @@ Test::Test(QWidget *parent)
 
     ui->two_double_editor->set_suffix("%");
     ui->two_double_editor->set_range(-50.0, 100);
+    QToolButton *btn = new QToolButton(this);
+    btn->setIcon(QIcon(":dark/icons/dark/link.png"));
+    ui->verticalLayout->addWidget(btn);
     //    connect(qApp, &QApplication::focusChanged, this, [](QWidget *old, QWidget *now) {
     //        qDebug() << "old: " << old << " new: " << now;
     //    });

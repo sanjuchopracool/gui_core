@@ -48,6 +48,26 @@ endif()
 
 target_link_libraries(gui_core PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
+# Resources:
+set(icons_resource_file
+    "icons/dark/link.png"
+    "icons/dark/link@2x.png"
+)
+
+qt_add_resources(gui_core "icons"
+    PREFIX
+        "/dark/"
+    FILES
+        ${icons_resource_file}
+)
+
+qt_add_resources(gui_core "stylesheet"
+    PREFIX
+        "/"
+    FILES
+        "styles/dark_style.css"
+)
+
 set_target_properties(gui_core PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

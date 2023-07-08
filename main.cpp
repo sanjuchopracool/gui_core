@@ -6,10 +6,14 @@
 
 int main(int argc, char *argv[])
 {
+    Q_INIT_RESOURCE(icons);
+    Q_INIT_RESOURCE(stylesheet);
     QApplication a(argc, argv);
+    //    QIcon::setThemeSearchPaths(QStringList() << ":dark");
+    QIcon::setThemeName(":dark");
     QApplication::setStyle(new DarkStyle);
     {
-        QFile stylesheet(QDir::homePath() + "/PROJECTS/gui_core/styles/dark_style.css");
+        QFile stylesheet(":styles/dark_style.css");
         if (stylesheet.open(QIODevice::ReadOnly))
             a.setStyleSheet(stylesheet.readAll());
     }

@@ -4,6 +4,9 @@
 #include <QHBoxLayout>
 #include <QMouseEvent>
 
+// TODO change cursor size on click and mouse move
+// change size after drag start
+
 void LabelEditor::enterEvent(QEnterEvent *ev)
 {
     override_cursor();
