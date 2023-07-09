@@ -240,7 +240,7 @@ double DoubleEditor::validated_value(double value) const
     return value;
 }
 
-TwoIntEditor::TwoIntEditor(QWidget *parent)
+IntPairEditor::IntPairEditor(QWidget *parent)
     : QWidget(parent)
 {
     m_left = new IntEditor(this, false);
@@ -253,20 +253,43 @@ TwoIntEditor::TwoIntEditor(QWidget *parent)
     main_layout->addWidget(m_left);
     main_layout->addWidget(m_right);
     setLayout(main_layout);
+
+    connect(m_left, &IntEditor::value_changed, this, [this](int val) { emit x_changed(val); });
+    connect(m_right, &IntEditor::value_changed, this, [this](int val) { emit y_changed(val); });
 }
 
-void TwoIntEditor::set_suffix(const QString &suffix)
+void IntPairEditor::set_suffix(const QString &suffix)
 {
     m_right->set_suffix(suffix);
 }
 
-void TwoIntEditor::set_range(double min, double max)
+void IntPairEditor::set_range(int min, int max)
 {
     m_left->set_range(min, max);
     m_right->set_range(min, max);
 }
 
-TwoDoubleEditor::TwoDoubleEditor(QWidget *parent)
+void IntPairEditor::set_x(int x)
+{
+    m_left->set_value(x);
+}
+
+void IntPairEditor::set_y(int y)
+{
+    m_right->set_value(y);
+}
+
+int IntPairEditor::x_value() const
+{
+    return m_left->value();
+}
+
+int IntPairEditor::y_value() const
+{
+    return m_right->value();
+}
+
+DoublePairEditor::DoublePairEditor(QWidget *parent)
     : QWidget(parent)
 {
     m_left = new DoubleEditor(this, false);
@@ -279,15 +302,40 @@ TwoDoubleEditor::TwoDoubleEditor(QWidget *parent)
     main_layout->addWidget(m_left);
     main_layout->addWidget(m_right);
     setLayout(main_layout);
+
+    connect(m_left, &DoubleEditor::value_changed, this, [this](double val) { emit x_changed(val); });
+    connect(m_right, &DoubleEditor::value_changed, this, [this](double val) {
+        emit y_changed(val);
+    });
 }
 
-void TwoDoubleEditor::set_suffix(const QString &suffix)
+void DoublePairEditor::set_suffix(const QString &suffix)
 {
     m_right->set_suffix(suffix);
 }
 
-void TwoDoubleEditor::set_range(double min, double max)
+void DoublePairEditor::set_range(double min, double max)
 {
     m_left->set_range(min, max);
     m_right->set_range(min, max);
+}
+
+void DoublePairEditor::set_x(double x)
+{
+    m_left->set_value(x);
+}
+
+void DoublePairEditor::set_y(double y)
+{
+    m_right->set_value(y);
+}
+
+double DoublePairEditor::x_value() const
+{
+    return m_left->value();
+}
+
+double DoublePairEditor::y_value() const
+{
+    return m_right->value();
 }

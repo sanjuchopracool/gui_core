@@ -52,6 +52,7 @@ public:
 
     void set_range(int min, int max);
     void set_value(int value);
+    int value() const { return m_value; }
 
 signals:
     void value_changed(int);
@@ -80,6 +81,8 @@ public:
     void set_range(double min, double max);
     void set_value(double value);
 
+    double value() const { return m_value; }
+
 signals:
     void value_changed(double);
 
@@ -97,26 +100,46 @@ private:
     double m_min = 0;
     double m_max = 100;
 };
-class TwoIntEditor : public QWidget
+
+class IntPairEditor : public QWidget
 {
     Q_OBJECT
 public:
-    TwoIntEditor(QWidget *parent);
+    IntPairEditor(QWidget *parent);
     void set_suffix(const QString &suffix);
-    void set_range(double min, double max);
+    void set_range(int min, int max);
+
+    void set_x(int x);
+    void set_y(int y);
+
+    int x_value() const;
+    int y_value() const;
+signals:
+    void x_changed(int);
+    void y_changed(int);
 
 private:
     IntEditor *m_left = nullptr;
     IntEditor *m_right = nullptr;
 };
 
-class TwoDoubleEditor : public QWidget
+class DoublePairEditor : public QWidget
 {
     Q_OBJECT
 public:
-    TwoDoubleEditor(QWidget *parent);
+    DoublePairEditor(QWidget *parent);
     void set_suffix(const QString &suffix);
     void set_range(double min, double max);
+
+    void set_x(double x);
+    void set_y(double y);
+
+    double x_value() const;
+    double y_value() const;
+
+signals:
+    void x_changed(double);
+    void y_changed(double);
 
 private:
     DoubleEditor *m_left = nullptr;

@@ -20,6 +20,8 @@ set(PROJECT_SOURCES
         widgets/editors/line_editor.h widgets/editors/line_editor.cpp
         widgets/editors/number_editor.h widgets/editors/number_editor.cpp
         styles/dark_style.h styles/dark_style.cpp
+        widgets/linked_number_editor.h widgets/linked_number_editor.cpp
+        widgets/checkable_icon.h widgets/checkable_icon.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

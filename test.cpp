@@ -2,7 +2,9 @@
 #include <QIntValidator>
 #include <QToolButton>
 #include <QVBoxLayout>
+#include "widgets/checkable_icon.h"
 #include "widgets/editors/number_editor.h"
+#include "widgets/linked_number_editor.h"
 
 Test::Test(QWidget *parent)
     : QWidget(parent)
@@ -20,21 +22,27 @@ Test::Test(QWidget *parent)
     double_editor->set_suffix("%");
     main_layout->addWidget(double_editor);
 
-    TwoIntEditor *two_int_editor = new TwoIntEditor(this);
+    IntPairEditor *two_int_editor = new IntPairEditor(this);
     two_int_editor->set_suffix("px");
     two_int_editor->set_range(-100, 500);
     main_layout->addWidget(two_int_editor);
 
-    TwoDoubleEditor *two_double_editor = new TwoDoubleEditor(this);
+    DoublePairEditor *two_double_editor = new DoublePairEditor(this);
     two_double_editor->set_suffix("%");
     two_double_editor->set_range(-50.0, 100);
     main_layout->addWidget(two_double_editor);
 
-    QToolButton *btn = new QToolButton(this);
-    btn->setIcon(QIcon::fromTheme("link"));
-    main_layout->addWidget(btn);
+    LinkedIntEditor *lint = new LinkedIntEditor(true, this);
+    lint->set_range(-50, 133);
+    lint->set_suffix("inch");
+    main_layout->addWidget(lint);
 
-    btn = new QToolButton(this);
+    LinkedDoubleEditor *ldbl = new LinkedDoubleEditor(true, this);
+    ldbl->set_range(-50.0123, 233.355);
+    ldbl->set_suffix("m");
+    main_layout->addWidget(ldbl);
+
+    QToolButton *btn = new QToolButton(this);
     btn->setIcon(QIcon(":icons/dark/actions/16@2x/link.png"));
     main_layout->addWidget(btn);
 
