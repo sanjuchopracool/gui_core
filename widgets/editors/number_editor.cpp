@@ -23,6 +23,7 @@ NumberEditor::NumberEditor(QWidget *parent, bool add_spacer)
     main_layout->setContentsMargins(0, 0, 0, 0);
     main_layout->setSpacing(0);
     main_layout->addWidget(m_label_edit);
+    main_layout->addSpacing(2);
     main_layout->addWidget(m_line_edit);
     main_layout->addWidget(m_suffix_label);
 
@@ -67,7 +68,7 @@ NumberEditor::NumberEditor(QWidget *parent, bool add_spacer)
 
 void NumberEditor::set_suffix(const QString &suffix)
 {
-    m_suffix_label->setText(' ' + suffix);
+    m_suffix_label->setText(suffix);
 }
 
 void NumberEditor::focusInEvent(QFocusEvent *event)
@@ -245,7 +246,7 @@ IntPairEditor::IntPairEditor(QWidget *parent)
 {
     m_left = new IntEditor(this, false);
     m_right = new IntEditor(this);
-    m_left->set_suffix(", ");
+    m_left->set_suffix(",");
 
     QHBoxLayout *main_layout = new QHBoxLayout();
     main_layout->setContentsMargins(0, 0, 0, 0);
@@ -294,7 +295,7 @@ DoublePairEditor::DoublePairEditor(QWidget *parent)
 {
     m_left = new DoubleEditor(this, false);
     m_right = new DoubleEditor(this);
-    m_left->set_suffix(", ");
+    m_left->set_suffix(",");
 
     QHBoxLayout *main_layout = new QHBoxLayout();
     main_layout->setContentsMargins(0, 0, 0, 0);
