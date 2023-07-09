@@ -10,9 +10,9 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(stylesheet);
     QApplication a(argc, argv);
 
-    QString path = QDir::homePath() + "/PROJECTS/gui_core/icons/dark";
-    qDebug() << QIcon::themeSearchPaths();
+    QString path = QDir::homePath() + "/PROJECTS/gui_core/icons";
     QIcon::setThemeSearchPaths(QStringList() << path);
+    qDebug() << QIcon::themeSearchPaths();
     QIcon::setThemeName("dark");
     qDebug() << QIcon::hasThemeIcon("link");
 

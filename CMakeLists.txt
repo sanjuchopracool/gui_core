@@ -16,7 +16,6 @@ set(PROJECT_SOURCES
         main.cpp
         test.cpp
         test.h
-        test.ui
         widgets/editors/label_editor.h widgets/editors/label_editor.cpp
         widgets/editors/line_editor.h widgets/editors/line_editor.cpp
         widgets/editors/number_editor.h widgets/editors/number_editor.cpp
