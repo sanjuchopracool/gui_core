@@ -22,6 +22,7 @@ set(PROJECT_SOURCES
         styles/dark_style.h styles/dark_style.cpp
         widgets/linked_number_editor.h widgets/linked_number_editor.cpp
         widgets/checkable_icon.h widgets/checkable_icon.cpp
+        model/composition_view_model.h model/composition_view_model.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
